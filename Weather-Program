@@ -1,0 +1,55 @@
+
+
+WeatherProgram.java
+
+
+import (link unavailable)*;
+import (link unavailable)*;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
+public class WeatherProgram {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter city name: ");
+        String city = scanner.nextLine();
+
+        URL url = new URL("(link unavailable)" + city + "&units=metric&appid=YOUR_API_KEY");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == 200) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = reader.readLine()) != null) {
+                response.append(inputLine);
+            }
+            reader.close();
+
+            JSONObject jsonObject = new JSONObject(response.toString());
+            String weather = jsonObject.getJSONArray("weather").getJSONObject(0).getString("main");
+            double temperature = jsonObject.getJSONObject("main").getDouble("temp");
+            double humidity = jsonObject.getJSONObject("main").getDouble("humidity");
+
+            System.out.println("Weather: " + weather);
+            System.out.println("Temperature: " + temperature + "°C");
+            System.out.println("Humidity: " + humidity + "%");
+        } else {
+            System.out.println("Failed to retrieve weather data");
+        }
+    }
+}
+
+
+Example usage:
+
+
+Enter city name: London
+Weather: Clouds
+Temperature: 22.2°C
+Humidity: 60%
+
